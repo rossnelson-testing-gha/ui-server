@@ -1,0 +1,49 @@
+name: On Commit Dispatch
+
+on:
+  repository_dispatch:
+    types: [sync-from-ui-commit]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ui-server
+        uses: actions/checkout@v4
+
+      - name: Download and Build UI
+        uses: ./.github/actions/download-and-build-ui
+        with:
+          ref: ${{ github.event.client_payload.ref }}
+
+      - name: Commit changes
+        run: |
+          git config --local user.name 'Temporal Data (cicd)'
+          git config --local user.email 'commander-data@temporal.io'
+          git add .
+          if git diff-index --quiet HEAD; then
+            echo "No changes to commit."
+            echo "changes_committed=false" >> $GITHUB_ENV
+            exit 0
+          else
+            echo "changes_committed=true" >> $GITHUB_ENV
+          fi
+          git commit -m "Sync from UI commit ${{ github.sha }}"
+          git push
+
+      - name: Setup Docker
+        if: env.changes_committed == 'true'
+        uses: ./.github/actions/setup-docker
+        with:
+          docker_username: ${{ secrets.DOCKER_USERNAME }}
+          docker_pat: ${{ secrets.DOCKER_PAT }}
+
+      - name: Docker Build and Push
+        if: env.changes_committed == 'true'
+        uses: ./.github/actions/docker-build-push
+        with:
+          images: temporaliotest/ui
+          tags: |
+            type=sha,format=short,event=branch
+            latest
+

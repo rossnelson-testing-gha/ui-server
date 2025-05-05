@@ -1,0 +1,28 @@
+name: 'Docker Build and Push'
+description: 'Build and push Docker images'
+
+inputs:
+  images:
+    description: 'Docker images'
+    required: true
+  tags:
+    description: 'Docker metadata tags'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Docker meta for Cloud Release image
+      id: meta_release
+      uses: docker/metadata-action@v4
+      with:
+        images: temporalio/cloud-ui
+        tags: ${{ inputs.tags }}
+
+    - name: Build and Push Docker Image
+      uses: docker/build-push-action@v4
+      with:
+        push: true
+        platforms: linux/amd64,linux/arm64
+        tags: ${{steps.meta_release.outputs.tags }}
+        labels: ${{ steps.meta_release.outputs.labels }}
