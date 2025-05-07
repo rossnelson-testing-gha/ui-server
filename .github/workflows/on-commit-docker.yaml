@@ -1,0 +1,31 @@
+name: On Commit Docker
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ui-server
+        uses: actions/checkout@v4
+
+      - name: Setup Docker
+        uses: ./.github/actions/setup-docker
+        with:
+          docker_username: ${{ secrets.DOCKER_USERNAME }}
+          docker_pat: ${{ secrets.DOCKER_PAT }}
+
+      - name: Docker Build and Push
+        uses: ./.github/actions/docker-build-push
+        with:
+          images: ${{ secrets.DOCKER_IMAGE_UI }}
+          tags: |
+            type=sha,format=short,event=branch
+            latest

@@ -1,0 +1,40 @@
+name: On Release Docker
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  actions: write
+
+jobs:
+  sync-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ui-server
+        uses: actions/checkout@v4
+
+      - name: Setup Docker
+        uses: ./.github/actions/setup-docker
+        with:
+          docker_username: ${{ secrets.DOCKER_USERNAME }}
+          docker_pat: ${{ secrets.DOCKER_PAT }}
+
+      - name: Docker Build and Push
+        uses: ./.github/actions/docker-build-push
+        with:
+          images: ${ secrets.DOCKER_IMAGE_UI }
+          tags: |
+            type=semver,pattern={{version}}
+            latest
+
+      - name: Docker Cloud Build and Push
+        uses: ./.github/actions/docker-build-push
+        with:
+          images: ${{ secrets.DOCKER_IMAGE_CLOUD_UI }}
+          tags: |
+            type=semver,pattern={{version}}
+            latest

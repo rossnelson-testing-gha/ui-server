@@ -35,19 +35,4 @@ jobs:
           git commit -m "Sync from UI commit ${{ github.sha }}"
           git push
 
-      - name: Setup Docker
-        if: env.changes_committed == 'true'
-        uses: ./.github/actions/setup-docker
-        with:
-          docker_username: ${{ secrets.DOCKER_USERNAME }}
-          docker_pat: ${{ secrets.DOCKER_PAT }}
-
-      - name: Docker Build and Push
-        if: env.changes_committed == 'true'
-        uses: ./.github/actions/docker-build-push
-        with:
-          images: ${{ secrets.DOCKER_IMAGE_UI }}
-          tags: |
-            type=sha,format=short,event=branch
-            latest
 
