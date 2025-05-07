@@ -4,6 +4,10 @@ on:
   repository_dispatch:
     types: [sync-from-ui-commit]
 
+permissions:
+  id-token: write
+  contents: write
+
 jobs:
   sync:
     runs-on: ubuntu-latest
