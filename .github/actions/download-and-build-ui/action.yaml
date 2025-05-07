@@ -19,6 +19,9 @@ runs:
         ref: ${{ inputs.ref }}
         path: ui-release
 
+    - name: Setup Node and pnpm
+      uses: ./.github/actions/setup-node
+
     - name: Install dependencies and build UI
       shell: bash
       run: |
