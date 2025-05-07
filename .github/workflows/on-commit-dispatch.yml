@@ -46,7 +46,7 @@ jobs:
         if: env.changes_committed == 'true'
         uses: ./.github/actions/docker-build-push
         with:
-          images: temporaliotest/ui
+          images: ${{ secrets.DOCKER_IMAGE_UI }}
           tags: |
             type=sha,format=short,event=branch
             latest
