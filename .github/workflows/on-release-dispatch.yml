@@ -22,36 +22,13 @@ jobs:
         with:
           ref: ${{ github.event.client_payload.release_tag }}
 
-      - name: Create Pull Request
-        id: create-pull-request
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: sync-ui-${{ github.event.client_payload.release_tag }}
-          title: Sync from UI ${{ github.event.client_payload.release_tag }}
-          commit-message: "chore: sync from ui@${{ github.event.client_payload.release_tag }}"
-          body: |
-            This PR syncs the latest UI server code from [ui@${{ github.event.client_payload.release_tag }}](${{ github.event.client_payload.release_url }}).
-
-      - name: PR approver token
-        id: pr_approver_token
-        uses: actions/create-github-app-token@v2
-        with:
-          app-id: ${{ secrets.TEMPORAL_CICD_APP_ID }}
-          private-key: ${{ secrets.TEMPORAL_CICD_PRIVATE_KEY }}
-
-      - name: Auto-approve PR
-        uses: hmarr/auto-approve-action@v3
-        with:
-          github-token: ${{ steps.pr_approver_token.outputs.token }}
-          pull-request-number: ${{ steps.create-pull-request.outputs.pull-request-number }}
-
-      - name: Merge PR
-        uses: peter-evans/enable-pull-request-automerge@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          pull-request-number: ${{ steps.create-pull-request.outputs.pull-request-number }}
-          merge-method: squash
+      - name: Commit changes
+        run: |
+          git config --local user.name 'Temporal Data (cicd)'
+          git config --local user.email 'commander-data@temporal.io'
+          git add .
+          git commit -m "Sync from UI release ${{ github.event.client_payload.release_tag }}"
+          git push
 
       - name: Create GitHub Release
         id: create_release
