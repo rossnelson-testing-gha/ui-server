@@ -33,10 +33,17 @@ jobs:
           body: |
             This PR syncs the latest UI server code from [ui@${{ github.event.client_payload.release_tag }}](${{ github.event.client_payload.release_url }}).
 
+      - name: PR approver token
+        id: pr_approver_token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.TEMPORAL_CICD_APP_ID }}
+          private-key: ${{ secrets.TEMPORAL_CICD_PRIVATE_KEY }}
+
       - name: Auto-approve PR
         uses: hmarr/auto-approve-action@v3
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ steps.pr_approver_token.outputs.token }}
           pull-request-number: ${{ steps.create-pull-request.outputs.pull-request-number }}
 
       - name: Merge PR
