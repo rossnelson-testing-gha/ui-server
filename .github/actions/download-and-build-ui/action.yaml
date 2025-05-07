@@ -20,12 +20,14 @@ runs:
         path: ui-release
 
     - name: Install dependencies and build UI
+      shell: bash
       run: |
         cd ui-release
         pnpm install --frozen-lockfile
         pnpm build:server
 
     - name: Copy UI to server
+      shell: bash
       run: |
         rm -rf server/proto/dependencies/api
         cp -r ui-release/server/* ./
