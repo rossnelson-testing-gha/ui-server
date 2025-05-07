@@ -23,6 +23,7 @@ jobs:
           ref: ${{ github.event.client_payload.release_tag }}
 
       - name: Create Pull Request
+        id: create-pull-request
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
