@@ -15,9 +15,6 @@ jobs:
       - name: Checkout ui-server
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: ./.github/actions/setup-node
-
       - name: Download and Build UI
         uses: ./.github/actions/download-and-build-ui
         with:
