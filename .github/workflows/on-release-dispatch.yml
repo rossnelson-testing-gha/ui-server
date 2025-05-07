@@ -39,56 +39,6 @@ jobs:
           append_body: true
           make_latest: true
           tag_name: ${{ github.event.client_payload.release_tag }}
-          name: Release ${{ github.event.client_payload.release_tag }}
+          name: ${{ github.event.client_payload.release_tag }}
           body: |
             Release synced from [ui@${{ github.event.client_payload.release_tag }}](${{ github.event.client_payload.release_url }})
-
-  release-go:
-    runs-on: ubuntu-latest
-    needs: [sync-ui]
-    steps:
-      - name: Checkout merged branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.client_payload.release_tag }}
-
-      - name: Setup Go
-        uses: ./.github/actions/setup-go
-        with:
-          token: ${{ needs.sync-ui.outputs.generate_token.outputs.token }}
-
-      - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v6
-        with:
-          version: '~> v2'
-          args: release
-        env:
-          GITHUB_TOKEN: ${{ needs.sync-ui.outputs.generate_token.outputs.token }}
-
-  dispatch-saas-ui-server:
-    runs-on: ubuntu-latest
-    needs: [sync-ui, release-go]
-    steps:
-      - name: Prepare token
-        id: generate_token
-        uses: actions/create-github-app-token@v2
-        with:
-          app-id: ${{ secrets.TEMPORAL_CICD_APP_ID }}
-          private-key: ${{ secrets.TEMPORAL_CICD_PRIVATE_KEY }}
-          permission-contents: write
-          repositories: ${{ secrets.DOWNSTREAM_REPO }}
-
-      - name: Dispatch to SaaS UI Server
-        uses: peter-evans/repository-dispatch@v3
-        with:
-          token: ${{ steps.generate_token.outputs.token }}
-          repository: ${{ secrets.DOWNSTREAM_REPO }}
-          event-type: sync-from-ui-server-release
-          client-payload: |
-            {
-              "ui_release_tag": "${{ github.event.client_payload.release_tag }}",
-              "ui_release_url": "${{ github.event.client_payload.release_url }}",
-              "release_tag": "${{ needs.sync-ui.outputs.create_release.outputs.tag_name }}",
-              "release_url": "${{ needs.sync-ui.outputs.create_release.outputs.html_url }}"
-            }
-
