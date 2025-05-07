@@ -12,7 +12,7 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Docker meta for Cloud Release image
+    - name: Docker meta for Release image
       id: meta_release
       uses: docker/metadata-action@v4
       with:
