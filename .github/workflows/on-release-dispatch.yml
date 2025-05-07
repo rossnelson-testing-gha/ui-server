@@ -50,7 +50,7 @@ jobs:
       - name: Checkout ui-server
         uses: actions/checkout@v4
         with:
-          ref: ${{ needs.sync-ui.outputs.create_release.outputs.tag_name }}
+          ref: ${{ github.event.client_payload.release_tag }}
 
       - name: Setup Docker
         uses: ./.github/actions/setup-docker
@@ -81,7 +81,7 @@ jobs:
       - name: Checkout merged branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ needs.sync-ui.outputs.create_release.outputs.tag_name }}
+          ref: ${{ github.event.client_payload.release_tag }}
 
       - name: Setup Go
         uses: ./.github/actions/setup-go
