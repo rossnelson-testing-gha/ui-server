@@ -88,13 +88,13 @@ jobs:
           app-id: ${{ secrets.TEMPORAL_CICD_APP_ID }}
           private-key: ${{ secrets.TEMPORAL_CICD_PRIVATE_KEY }}
           permission-contents: write
-          repositories: ${{ secrets.DOWNSTREAM_REPO }}
+          repositories: ${{ vars.DOWNSTREAM_REPO }}
 
       - name: Dispatch to SaaS UI Server
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ steps.generate_token.outputs.token }}
-          repository: ${{ secrets.DOWNSTREAM_REPO }}
+          repository: ${{ vars.DOWNSTREAM_ORG }}/${{ var.DOWNSTREAM_REPO }}
           event-type: sync-from-ui-server-release
           client-payload: |
             {

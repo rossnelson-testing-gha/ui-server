@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       commit_hash: ${{ steps.commit_changes.outputs.commit_hash }}
-      release_url: ${{ steps.create_release.outputs.upload_url }}
+      release_url: ${{ steps.create_release.outputs.url }}
     steps:
       - name: Checkout ui-server
         uses: actions/checkout@v4
