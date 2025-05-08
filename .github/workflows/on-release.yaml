@@ -44,7 +44,7 @@ jobs:
       - name: Docker UI Build and Push
         uses: ./.github/actions/docker-build-push
         with:
-          images: ${{ secrets.DOCKER_IMAGE_UI }}
+          images: ${{ vars.DOCKER_IMAGE_UI }}
           tags: |
             type=semver,pattern={{version}}
             latest
@@ -52,7 +52,8 @@ jobs:
       - name: Docker Cloud Build and Push
         uses: ./.github/actions/docker-build-push
         with:
-          images: ${{ secrets.DOCKER_IMAGE_CLOUD_UI }}
+          images: ${{ vars.DOCKER_IMAGE_CLOUD_UI }}
+          build_args: TEMPORAL_CLOUD_UI=true
           tags: |
             type=semver,pattern={{version}}
             latest

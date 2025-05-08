@@ -36,7 +36,7 @@ jobs:
       - name: Docker Build and Push
         uses: ./.github/actions/docker-build-push
         with:
-          images: ${{ secrets.DOCKER_IMAGE_UI }}
+          images: ${{ vars.DOCKER_IMAGE_TEST_UI }}
           tags: |
             type=sha,format=short,event=branch
             latest
