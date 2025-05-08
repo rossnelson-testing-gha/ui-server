@@ -94,7 +94,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ steps.generate_token.outputs.token }}
-          repository: ${{ vars.DOWNSTREAM_ORG }}/${{ var.DOWNSTREAM_REPO }}
+          repository: ${{ vars.DOWNSTREAM_ORG }}/${{ vars.DOWNSTREAM_REPO }}
           event-type: sync-from-ui-server-release
           client-payload: |
             {
