@@ -42,7 +42,7 @@ jobs:
       - name: Docker UI Build and Push
         uses: ./.github/actions/docker-build-push
         with:
-          images: ${ secrets.DOCKER_IMAGE_UI }
+          images: ${{ secrets.DOCKER_IMAGE_UI }}
           tags: |
             type=semver,pattern={{version}}
             latest
