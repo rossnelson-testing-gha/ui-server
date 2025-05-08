@@ -4,6 +4,14 @@ on:
   push:
     branches:
       - main
+  workflow_call:
+    inputs:
+      ref:
+        required: true
+        type: string
+
+env:
+  GITHUB_REF: ${{ inputs.ref }}
 
 permissions:
   id-token: write
@@ -15,6 +23,8 @@ jobs:
     steps:
       - name: Checkout ui-server
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.GITHUB_REF }}
 
       - name: Setup Docker
         uses: ./.github/actions/setup-docker
