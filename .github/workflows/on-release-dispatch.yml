@@ -47,10 +47,11 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.generate_token.outputs.token }}
           generate_release_notes: true
           append_body: true
           tag_name: ${{ github.event.client_payload.release_tag }}
           name: ${{ github.event.client_payload.release_tag }}
           body: |
             Release synced from [ui@${{ github.event.client_payload.release_tag }}](${{ github.event.client_payload.release_url }})
+
