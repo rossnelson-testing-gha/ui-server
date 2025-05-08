@@ -3,6 +3,7 @@ name: On Release
 on:
   release:
     types: [published]
+
   workflow_call:
     inputs:
       ref:
@@ -16,7 +17,7 @@ on:
         type: string
 
 env:
-  GITHUB_REF: ${{ inputs.ref }}
+  GITHUB_REF: ${{ inputs.ref || github.event.ref }}
   GITHUB_RELEASE_TAG: ${{ inputs.release_tag || github.event.release.tag_name }}
   GITHUB_RELEASE_URL: ${{ inputs.release_url || github.event.release.html_url }}
 
@@ -47,7 +48,7 @@ jobs:
           images: ${{ vars.DOCKER_IMAGE_UI }}
           tags: |
             type=semver,pattern={{version}}
-            ${{ github.event.release.tag_name }}
+            ${{ env.GITHUB_RELEASE_TAG }}
             latest
 
       - name: Docker Cloud Build and Push
@@ -57,7 +58,7 @@ jobs:
           build_args: TEMPORAL_CLOUD_UI=true
           tags: |
             type=semver,pattern={{version}}
-            ${{ github.event.release.tag_name }}
+            ${{ env.GITHUB_RELEASE_TAG }}
             latest
 
   release-go:
