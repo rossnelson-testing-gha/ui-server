@@ -62,6 +62,8 @@ jobs:
     steps:
       - name: Checkout merged branch
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.GITHUB_REF }}
 
       - name: Setup Go
         uses: ./.github/actions/setup-go
