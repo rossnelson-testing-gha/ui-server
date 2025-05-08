@@ -35,4 +35,12 @@ jobs:
           git commit -m "Sync from UI commit ${{ github.sha }}"
           git push
 
+  commit:
+    uses: ./.github/workflows/on-commit.yaml
+    needs: [sync]
+    secrets: inherit
+    with:
+      ref: ${{ needs.sync.outputs.commit_hash }}
+      release_tag: ${{ github.event.client_payload.release_tag }}
+      release_url: ${{ needs.sync-ui.outputs.release_url }}
 
