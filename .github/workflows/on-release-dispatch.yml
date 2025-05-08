@@ -22,20 +22,8 @@ jobs:
         with:
           ref: ${{ github.event.client_payload.release_tag }}
 
-      # If an action pushes code using the repository’s GITHUB_TOKEN, a new
-      # workflow will not run even when the repository contains a workflow
-      # configured to run when push events occur.
-      - name: Prepare token
-        id: generate_token
-        uses: actions/create-github-app-token@v2
-        with:
-          app-id: ${{ secrets.TEMPORAL_CICD_APP_ID }}
-          private-key: ${{ secrets.TEMPORAL_CICD_PRIVATE_KEY }}
-          permission-contents: write
-
       - name: Commit changes
-        env:
-          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+        id: commit_changes
         run: |
           git config --local user.name 'Temporal Data (cicd)'
           git config --local user.email 'commander-data@temporal.io'
@@ -43,13 +31,14 @@ jobs:
           git commit -m "Sync from UI release ${{ github.event.client_payload.release_tag }}"
           git push
 
+          echo "commit_hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+
       - name: Create GitHub Release
         id: create_release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          token: ${{ steps.generate_token.outputs.token }}
+          target_commitish: ${{ steps.commit_changes.outputs.commit_hash }}
           generate_release_notes: true
-          append_body: true
           tag_name: ${{ github.event.client_payload.release_tag }}
           name: ${{ github.event.client_payload.release_tag }}
           body: |
