@@ -55,7 +55,7 @@ jobs:
         uses: ./.github/actions/docker-build-push
         with:
           images: ${{ vars.DOCKER_IMAGE_CLOUD_UI }}
-          build_args: TEMPORAL_CLOUD_UI=true
+          build-args: TEMPORAL_CLOUD_UI=true
           tags: |
             type=semver,pattern={{version}}
             ${{ env.GITHUB_RELEASE_TAG }}
