@@ -17,6 +17,8 @@ on:
 
 env:
   GITHUB_REF: ${{ inputs.ref }}
+  GITHUB_RELEASE_TAG: ${{ inputs.release_tag || github.event.release.tag_name }}
+  GITHUB_RELEASE_URL: ${{ inputs.release_url || github.event.release.html_url }}
 
 permissions:
   contents: write
@@ -91,8 +93,8 @@ jobs:
           event-type: sync-from-ui-server-release
           client-payload: |
             {
-              "ref": "refs/tags/${{ github.event.release.tag_name }}",
-              "release_tag": "${{ github.event.release.tag_name }}",
-              "release_url": "${{ github.event.release.html_url }}",
+              "ref": "${{ env.GITHUB_REF }}",
+              "release_tag": "${{ env.GITHUB_RELEASE_TAG }}",
+              "release_url": "${{ env.GITHUB_RELEASE_URL }}"
             }
 
