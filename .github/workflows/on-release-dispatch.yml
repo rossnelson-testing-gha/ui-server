@@ -27,14 +27,9 @@ jobs:
 
       - name: Commit changes
         id: commit_changes
-        run: |
-          git config --local user.name 'Temporal Data (cicd)'
-          git config --local user.email 'commander-data@temporal.io'
-          git add .
-          git commit -m "Sync from UI release ${{ github.event.client_payload.release_tag }}"
-          git push
-
-          echo "commit_hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+        uses: ./.github/actions/commit-changes
+        with:
+          message: "Sync from UI release ${{ github.event.client_payload.release_tag }}"
 
       - name: Create GitHub Release
         id: create_release
@@ -55,4 +50,3 @@ jobs:
       ref: ${{ needs.sync-ui.outputs.commit_hash }}
       release_tag: ${{ github.event.client_payload.release_tag }}
       release_url: ${{ needs.sync-ui.outputs.release_url }}
-
