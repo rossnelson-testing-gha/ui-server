@@ -47,7 +47,7 @@ jobs:
           images: ${{ vars.DOCKER_IMAGE_UI }}
           tags: |
             type=semver,pattern={{version}}
-            ${{ vars.DOCKER_IMAGE_UI }}:${{ github.event.release.tag_name }}
+            ${{ github.event.release.tag_name }}
             latest
 
       - name: Docker Cloud Build and Push
@@ -57,7 +57,7 @@ jobs:
           build_args: TEMPORAL_CLOUD_UI=true
           tags: |
             type=semver,pattern={{version}}
-            ${{ vars.DOCKER_IMAGE_CLOUD_UI }}:${{ github.event.release.tag_name }}
+            ${{ github.event.release.tag_name }}
             latest
 
   release-go:
