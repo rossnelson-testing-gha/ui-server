@@ -49,6 +49,6 @@ jobs:
     needs: [sync-ui]
     secrets: inherit
     with:
-      ref: ${{ github.event.client_payload.ref }}
+      ref: ${{ needs.sync-ui.outputs.commit_hash }}
       release_tag: ${{ github.event.client_payload.release_tag }}
       release_url: ${{ github.event.client_payload.release_url }}
