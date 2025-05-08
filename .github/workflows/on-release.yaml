@@ -3,6 +3,20 @@ name: On Release
 on:
   release:
     types: [published]
+  workflow_call:
+    inputs:
+      ref:
+        required: true
+        type: string
+      release_tag:
+        required: true
+        type: string
+      release_url:
+        required: true
+        type: string
+
+env:
+  GITHUB_REF: ${{ inputs.ref }}
 
 permissions:
   contents: write

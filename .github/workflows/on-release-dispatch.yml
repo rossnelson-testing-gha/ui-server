@@ -44,3 +44,11 @@ jobs:
           body: |
             Release synced from [ui@${{ github.event.client_payload.release_tag }}](${{ github.event.client_payload.release_url }})
 
+  release-and-dispatch:
+    uses: ./.github/workflows/on-release.yaml
+    needs: [sync-ui]
+    secrets: inherit
+    with:
+      ref: ${{ github.event.client_payload.ref }}
+      release_tag: ${{ github.event.client_payload.release_tag }}
+      release_url: ${{ github.event.client_payload.release_url }}
