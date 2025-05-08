@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+
   workflow_call:
     inputs:
       ref:
@@ -11,7 +12,7 @@ on:
         type: string
 
 env:
-  GITHUB_REF: ${{ inputs.ref }}
+  GITHUB_REF: ${{ inputs.ref || github.event.ref }}
 
 permissions:
   id-token: write

@@ -11,6 +11,10 @@ permissions:
 jobs:
   sync:
     runs-on: ubuntu-latest
+
+    outputs:
+      commit_hash: ${{ steps.commit_changes.outputs.commit_hash }}
+
     steps:
       - name: Checkout ui-server
         uses: actions/checkout@v4
@@ -21,19 +25,10 @@ jobs:
           ref: ${{ github.event.client_payload.ref }}
 
       - name: Commit changes
-        run: |
-          git config --local user.name 'Temporal Data (cicd)'
-          git config --local user.email 'commander-data@temporal.io'
-          git add .
-          if git diff-index --quiet HEAD; then
-            echo "No changes to commit."
-            echo "changes_committed=false" >> $GITHUB_ENV
-            exit 0
-          else
-            echo "changes_committed=true" >> $GITHUB_ENV
-          fi
-          git commit -m "Sync from UI commit ${{ github.sha }}"
-          git push
+        id: commit_changes
+        uses: ./.github/actions/commit-changes
+        with:
+          message: "Sync from UI commit ${{ github.sha }}"
 
   commit:
     uses: ./.github/workflows/on-commit.yaml
@@ -41,6 +36,3 @@ jobs:
     secrets: inherit
     with:
       ref: ${{ needs.sync.outputs.commit_hash }}
-      release_tag: ${{ github.event.client_payload.release_tag }}
-      release_url: ${{ needs.sync-ui.outputs.release_url }}
-
