@@ -39,4 +39,5 @@ jobs:
           images: ${{ vars.DOCKER_IMAGE_TEST_UI }}
           tags: |
             type=sha,format=short,event=branch
+            ${{ vars.DOCKER_IMAGE_TEST_UI }}:${{ github.sha }}
             latest

@@ -19,7 +19,6 @@ runs:
       id: meta_release
       uses: docker/metadata-action@v4
       with:
-        context: git
         images: ${{ inputs.images }}
         tags: ${{ inputs.tags }}
 
