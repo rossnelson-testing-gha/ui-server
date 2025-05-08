@@ -20,7 +20,7 @@ jobs:
       - name: Download and Build UI
         uses: ./.github/actions/download-and-build-ui
         with:
-          ref: ${{ github.event.client_payload.release_tag }}
+          ref: ${{ github.event.client_payload.ref }}
 
       - name: Commit changes
         id: commit_changes
