@@ -30,9 +30,11 @@ runs:
 
     - name: Install dependencies and build UI
       shell: bash
+      env:
+        HUSKY: '0'
       run: |
         cd ui-release
-        pnpm install --frozen-lockfile
+        pnpm install
         pnpm build:server
 
     - name: Copy UI to server
