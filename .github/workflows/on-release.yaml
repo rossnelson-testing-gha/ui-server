@@ -19,7 +19,6 @@ on:
 env:
   GITHUB_REF: ${{ inputs.ref || github.event.ref }}
   GITHUB_RELEASE_TAG_NAME: ${{ inputs.release_tag || github.event.release.tag_name }}
-  GITHUB_RELEASE_VERSION: ${{ inputs.release_tag || github.event.release.tag_name }}
   GITHUB_RELEASE_URL: ${{ inputs.release_url || github.event.release.html_url }}
 
 permissions:
